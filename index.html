@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Доедальня — Конструктор</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    :root {
+      --bg: var(--tg-theme-bg-color, #f9fafb);
+      --text: var(--tg-theme-text-color, #111827);
+      --card-bg: var(--tg-theme-secondary-bg-color, #ffffff);
+      --hint: var(--tg-theme-hint-color, #6b7280);
+      --button: var(--tg-theme-button-color, #10b981);
+      --button-text: var(--tg-theme-button-text-color, #ffffff);
+    }
+    body {
+      margin: 0;
+      padding: 16px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      box-sizing: border-box;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .header h1 {
+      margin: 0 0 6px 0;
+      font-size: 22px;
+      font-weight: 700;
+    }
+    .header p {
+      margin: 0;
+      font-size: 14px;
+      color: var(--hint);
+    }
+    .card {
+      background-color: var(--card-bg);
+      border-radius: 14px;
+      padding: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      margin-bottom: 16px;
+    }
+    .card-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--hint);
+    }
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .tag {
+      background-color: var(--bg);
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 20px;
+      padding: 6px 12px;
+      font-size: 13px;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.15s ease;
+    }
+    .tag.active {
+      background-color: var(--button);
+      color: var(--button-text);
+      border-color: var(--button);
+    }
+    textarea {
+      width: 100%;
+      border: 1px solid rgba(0,0,0,0.1);
+      border-radius: 10px;
+      padding: 12px;
+      font-size: 15px;
+      background-color: var(--bg);
+      color: var(--text);
+      box-sizing: border-box;
+      resize: none;
+      outline: none;
+    }
+    .submit-btn {
+      width: 100%;
+      background-color: var(--button);
+      color: var(--button-text);
+      border: none;
+      border-radius: 12px;
+      padding: 14px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <h1>🥗 Доедальня</h1>
+    <p>Выбери остатки или напиши свои продукты</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Часто пропадает:</div>
+    <div class="tags" id="tagsList">
+      <div class="tag" onclick="toggleTag(this, 'половинка кабачка')">🥒 Кабачок</div>
+      <div class="tag" onclick="toggleTag(this, 'остатки сыра')">🧀 Сыр</div>
+      <div class="tag" onclick="toggleTag(this, 'ложка сметаны')">🍶 Сметана</div>
+      <div class="tag" onclick="toggleTag(this, 'вялый помидор')">🍅 Помидор</div>
+      <div class="tag" onclick="toggleTag(this, 'зелень')">🌿 Зелень</div>
+      <div class="tag" onclick="toggleTag(this, 'черствый хлеб')">🍞 Хлеб</div>
+      <div class="tag" onclick="toggleTag(this, 'пару яиц')">🥚 Яйца</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Твой список продуктов:</div>
+    <textarea id="ingredientsInput" rows="3" placeholder="Например: вареный рис, луковица, фасоль..."></textarea>
+    <button class="submit-btn" onclick="sendIngredients()">🍳 Спасти и приготовить</button>
+  </div>
+
+  <script>
+    const tg = window.Telegram.WebApp;
+    tg.expand();
+
+    let selectedTags = [];
+
+    function toggleTag(element, name) {
+      element.classList.toggle('active');
+      if (element.classList.contains('active')) {
+        selectedTags.push(name);
+      } else {
+        selectedTags = selectedTags.filter(item => item !== name);
+      }
+      updateInput();
+    }
+
+    function updateInput() {
+      const input = document.getElementById('ingredientsInput');
+      const baseText = input.value.split(', ').filter(val => !selectedTags.includes(val) && val.trim() !== '');
+      const all = [...selectedTags, ...baseText];
+      input.value = all.join(', ');
+    }
+
+    function sendIngredients() {
+      const input = document.getElementById('ingredientsInput').value.trim();
+      if (!input) {
+        tg.showAlert('Пожалуйста, выберите или укажите хотя бы один продукт!');
+        return;
+      }
+      tg.sendData(input);
+    }
+  </script>
+</body>
+</html>
