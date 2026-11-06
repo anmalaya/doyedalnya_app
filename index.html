@@ -21,13 +21,14 @@
       background-color: var(--bg);
       color: var(--text);
       box-sizing: border-box;
+      padding-bottom: 30px;
     }
     .header {
       text-align: center;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
     }
     .header h1 {
-      margin: 0 0 6px 0;
+      margin: 0 0 4px 0;
       font-size: 22px;
       font-weight: 700;
     }
@@ -41,15 +42,30 @@
       border-radius: 14px;
       padding: 16px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
     .card-title {
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 600;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
       text-transform: uppercase;
       letter-spacing: 0.5px;
       color: var(--hint);
+    }
+    .card-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .clear-btn {
+      background: none;
+      border: none;
+      color: #ef4444;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 2px 6px;
     }
     .tags {
       display: flex;
@@ -93,7 +109,7 @@
       font-size: 16px;
       font-weight: 600;
       cursor: pointer;
-      margin-top: 10px;
+      margin-top: 12px;
     }
   </style>
 </head>
@@ -104,8 +120,14 @@
     <p>Выбери остатки или напиши свои продукты</p>
   </div>
 
-<div class="card">
-    <div class="card-title">🥛 Молочное и сыр:</div>
+  <!-- Блок с тегами категорий -->
+  <div class="card">
+    <div class="card-header-row">
+      <div class="card-title" style="margin-bottom: 0;">Часто пропадает:</div>
+      <button class="clear-btn" onclick="clearAll()">✕ Сбросить всё</button>
+    </div>
+
+    <div class="card-title" style="margin-top: 10px;">🥛 Молочное и сыр:</div>
     <div class="tags">
       <div class="tag" onclick="toggleTag(this, 'остатки сыра')">🧀 Сыр</div>
       <div class="tag" onclick="toggleTag(this, 'сметана или йогурт')">🍶 Сметана / Йогурт</div>
@@ -132,7 +154,13 @@
       <div class="tag" onclick="toggleTag(this, 'банка консервов')">🥫 Консервы</div>
     </div>
   </div>
-  
+
+  <!-- Блок с полем ввода и кнопкой отправки -->
+  <div class="card">
+    <div class="card-title">Итоговый список продуктов:</div>
+    <textarea id="ingredientsInput" rows="3" placeholder="Например: вареный рис, луковица, консервированная фасоль..."></textarea>
+    <button class="submit-btn" onclick="sendIngredients()">🍳 Спасти и приготовить</button>
+  </div>
 
   <script>
     const tg = window.Telegram.WebApp;
@@ -155,6 +183,12 @@
       const baseText = input.value.split(', ').filter(val => !selectedTags.includes(val) && val.trim() !== '');
       const all = [...selectedTags, ...baseText];
       input.value = all.join(', ');
+    }
+
+    function clearAll() {
+      selectedTags = [];
+      document.querySelectorAll('.tag').forEach(tag => tag.classList.remove('active'));
+      document.getElementById('ingredientsInput').value = '';
     }
 
     function sendIngredients() {
