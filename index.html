@@ -104,24 +104,35 @@
     <p>Выбери остатки или напиши свои продукты</p>
   </div>
 
-  <div class="card">
-    <div class="card-title">Часто пропадает:</div>
-    <div class="tags" id="tagsList">
-      <div class="tag" onclick="toggleTag(this, 'половинка кабачка')">🥒 Кабачок</div>
+<div class="card">
+    <div class="card-title">🥛 Молочное и сыр:</div>
+    <div class="tags">
       <div class="tag" onclick="toggleTag(this, 'остатки сыра')">🧀 Сыр</div>
-      <div class="tag" onclick="toggleTag(this, 'ложка сметаны')">🍶 Сметана</div>
+      <div class="tag" onclick="toggleTag(this, 'сметана или йогурт')">🍶 Сметана / Йогурт</div>
+      <div class="tag" onclick="toggleTag(this, 'творог')">🥣 Творог</div>
+      <div class="tag" onclick="toggleTag(this, 'сливки или молоко')">🥛 Молоко / Сливки</div>
+    </div>
+
+    <div class="card-title" style="margin-top: 14px;">🥦 Овощи и зелень:</div>
+    <div class="tags">
       <div class="tag" onclick="toggleTag(this, 'вялый помидор')">🍅 Помидор</div>
-      <div class="tag" onclick="toggleTag(this, 'зелень')">🌿 Зелень</div>
+      <div class="tag" onclick="toggleTag(this, 'кабачок')">🥒 Кабачок / Огурец</div>
+      <div class="tag" onclick="toggleTag(this, 'половинка перца')">🫑 Сладкий перец</div>
+      <div class="tag" onclick="toggleTag(this, 'морковь')">🥕 Морковь</div>
+      <div class="tag" onclick="toggleTag(this, 'пучок зелени')">🌿 Зелень</div>
+    </div>
+
+    <div class="card-title" style="margin-top: 14px;">🍞 Основа и белок:</div>
+    <div class="tags">
       <div class="tag" onclick="toggleTag(this, 'черствый хлеб')">🍞 Хлеб</div>
-      <div class="tag" onclick="toggleTag(this, 'пару яиц')">🥚 Яйца</div>
+      <div class="tag" onclick="toggleTag(this, 'яйца')">🥚 Яйца</div>
+      <div class="tag" onclick="toggleTag(this, 'картофель')">🥔 Картошка</div>
+      <div class="tag" onclick="toggleTag(this, 'вареные крупы или макароны')">🍚 Рис / Макароны</div>
+      <div class="tag" onclick="toggleTag(this, 'мясные обрезки или сосиски')">🥓 Мясо / Колбаса</div>
+      <div class="tag" onclick="toggleTag(this, 'банка консервов')">🥫 Консервы</div>
     </div>
   </div>
-
-  <div class="card">
-    <div class="card-title">Твой список продуктов:</div>
-    <textarea id="ingredientsInput" rows="3" placeholder="Например: вареный рис, луковица, фасоль..."></textarea>
-    <button class="submit-btn" onclick="sendIngredients()">🍳 Спасти и приготовить</button>
-  </div>
+  
 
   <script>
     const tg = window.Telegram.WebApp;
