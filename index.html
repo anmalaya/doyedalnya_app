@@ -111,6 +111,10 @@
       cursor: pointer;
       margin-top: 12px;
     }
+    .submit-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
   </style>
 </head>
 <body>
@@ -185,6 +189,9 @@
   </div>
 
   <script>
+    // ВСТАВЬТЕ СЮДА ВАШУ ССЫЛКУ НА ВЕБХУК ВНУТРИ ОДИНАРНЫХ КАВЫЧЕК:
+    const WEBHOOK_URL = 'https://hook.eu1.make.com/uujcld9amry4vcv0t3trnjnrwgeohjwg';
+
     const tg = window.Telegram.WebApp;
     tg.expand();
 
@@ -213,7 +220,7 @@
       document.getElementById('ingredientsInput').value = '';
     }
 
-    function sendIngredients() {
+    async function sendIngredients() {
       const input = document.getElementById('ingredientsInput').value.trim();
       if (!input) {
         if (tg && tg.showAlert) {
@@ -224,17 +231,42 @@
         return;
       }
 
-      try {
-        tg.sendData(input);
-      } catch (e) {
-        console.warn('sendData error:', e);
+      const btn = document.querySelector('.submit-btn');
+      const originalText = btn.innerText;
+      btn.innerText = '⏳ Отправляю шефу...';
+      btn.disabled = true;
+
+      const userId = tg.initDataUnsafe?.user?.id;
+
+      if (!userId) {
+        tg.showAlert('Ошибка: не удалось определить ID пользователя. Откройте приложение внутри Telegram.');
+        btn.innerText = originalText;
+        btn.disabled = false;
+        return;
       }
 
-      setTimeout(() => {
-        try {
+      try {
+        const response = await fetch(WEBHOOK_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            user_id: userId,
+            ingredients: input
+          })
+        });
+
+        if (response.ok) {
           tg.close();
-        } catch (e) {}
-      }, 150);
+        } else {
+          throw new Error('Ошибка сервера');
+        }
+      } catch (error) {
+        tg.showAlert('Не удалось отправить продукты. Проверьте интернет и попробуйте снова.');
+        btn.innerText = originalText;
+        btn.disabled = false;
+      }
     }
   </script>
 </body>
